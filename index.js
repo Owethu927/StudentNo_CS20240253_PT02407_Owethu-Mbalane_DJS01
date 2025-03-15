@@ -13,19 +13,28 @@ const initialDistance = 0; // distance (km)
 const remainingFuel = 5000; // remaining fuel (kg)
 const fuelBurnRate = 0.5; // fuel burn rate (kg/s)
 
-
-const d2 = d + (vel*time) //calcultes new distance
-const rf = fbr*time //calculates remaining fuel
-const vel2 = calcNewVel(acc, vel, time) //calculates new velocity based on acceleration
-
-// Pick up an error with how the function below is called and make it robust to such errors
-calcNewVel = (vel, acc, time) => { 
-  return vel + (acc*time)
+//function deceration//
+function calcNewVel(velocity, acceleration, time) {
+  if (typeof velocity !== "number" || typeof acceleration !== "number" || typeof time !== "number") {
+    throw new Error("Incorrect input: velocity, acceleration andd time should be a number");
+    
+  }
+  return velocity + (acceleration * time);
 }
+// Pick up an error with how the function below is called and make it robust to such errors
+try {
+  const newDistance = initialDistance + (velocity * (time / 3600)); // Calculate new distance (convert time to hours)
+  const remainingFuelAfterBurn = remainingFuel - (fuelBurnRate * time); // Calculate remaining fuel
+  const newVelocity = calcNewVel(velocity, acceleration, time); // Calculate new velocity
 
-console.log(`Corrected New Velocity: ${vel2} km/h`);
-console.log(`Corrected New Distance: ${d2} km`);
-console.log(`Corrected Remaining Fuel: ${rf} kg`);
+  if (remainingFuelAfterBurn < 0) throw new Error("Fuel exhausted.");
+
+  console.log(`New Velocity: ${Math.round(newVelocity)} km/h`);
+  console.log(`New Distance: ${Math.round(newDistance)} km`);
+  console.log(`Remaining Fuel: ${Math.round(remainingFuelAfterBurn)} kg`);
+} catch (error) {
+  console.error(`Error: ${error.message}`);
+}
 
 
 
